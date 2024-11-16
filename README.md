@@ -17,3 +17,12 @@ query with the corresponding key (As described in the paper).
 
 ### MultiHead Attention
 <img width="377" alt="image" src="https://github.com/user-attachments/assets/2f7dbeaf-0eba-40a9-bb96-6fff7246ab99">
+
+## Positional Encoding
+
+for more information refer to the file 'positional_encoding.py'. 
+
+<img width="551" alt="image" src="https://github.com/user-attachments/assets/e828db9c-8897-4f92-a1fe-9d9ffb50ba81">
+
+where pos is the position and i is the dimension.
+
