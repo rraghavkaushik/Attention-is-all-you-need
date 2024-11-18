@@ -28,21 +28,34 @@ from keras.layers import TextVectorization, Layer, Embedding
 # final_output_embedding = embedded_words + embedded_indices
 # print('Final_output: ', final_output_embedding)
 class PositionEmbeddingLayer(Layer):
+    
     def __init__(self, output_sequence_length, vocab_size, output_length, **kwargs):
         super(PositionEmbeddingLayer, self).__init__(**kwargs)
-        self.word_embedding_layer = Embedding(vocab_size, output_length)
-        self.position_embedding_layer = Embedding(output_sequence_length, output_length)
+
+        word_embedding_matrix = self.position_encoding(vocab_size, output_length)   
+        position_embedding_matrix = self.position_encoding(sequence_length, output_length)
+        # self.word_embedding_layer = Embedding(vocab_size, output_length)
+        # self.position_embedding_layer = Embedding(output_sequence_length, output_length)
+
+        self.word_embedding_layer = Embedding(input_dim = vocab_size, output_dim = output_length, weights = [word_embedding_matrix], trainable = False)
+        self.position_embedding_layer = Embedding(
+            input_dim = output_sequence_length, output_dim = output_length, weights = [position_embedding_matrix], trainable=False)
+    
     def call(self, inputs):
+        
         position_indices = tf.range(tf.shape(inputs)[-1])
         embedded_words = self.word_embedding_layer(inputs)
         embedded_indices = self.position_embedding_layer(position_indices)
+        
         return embedded_words + embedded_indices
     
     def positional_encoding(self, seq_len, d, n = 10000):
+        
         p = np.zeroes((seq_len, d))
         for k in range(seq_len):
             for i in np.arange(int(d / 2)):
                 denom = np.power(n, 2 * i / d)
                 p[k, 2 * i] = np.sin(k / denom)
                 p[k, 2 * i + 1] = np.cos(k / denom)
+                
         return p
